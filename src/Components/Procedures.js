@@ -10,7 +10,9 @@ export default class Procedures extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      procedures: []
+      procedures: [],
+      isLoading: true,
+      fetchError: false
     };
   }
 
@@ -19,13 +21,19 @@ export default class Procedures extends React.Component {
   }
 
   fetchProcedures = () => {
+    this.setState({ isLoading: true });
     axios.get(baseURL + '/api/procedures')
     .then((response) => {
       this.setState({
-        procedures: response.data
+        procedures: response.data,
+        isLoading: false
       })
     })
-    .catch(function (error) {
+    .catch((error) => {
+      this.setState({
+        isLoading: false,
+        fetchError: true
+      })
       console.log(error);
     });
   }
@@ -42,6 +50,20 @@ export default class Procedures extends React.Component {
   }
 
   placeProcedures = () => {
+    if(this.state.isLoading) {
+      return (
+        <tr>
+          <td colSpan="3">Carregando procedimentos...</td>
+        </tr>
+      )
+    }
+    if(this.state.fetchError) {
+      return (
+        <tr>
+          <td colSpan="3">Erro ao carregar os procedimentos</td>
+        </tr>
+      )
+    }
     return this.state.procedures.map((element) => {
       return (
         <tr key={ element.id }>
@@ -58,22 +80,24 @@ export default class Procedures extends React.Component {
     })
   }
 
-  newProcedureHandler = () => {
+  newProcedureHandler = (element = { nome: '', custo: '' }, saveError = false) => {
     this.renderModal(
       <FormModal
         tittle="Novo Procedimento"
-        element={ { nome: '', custo: '' } }
+        element={ element }
+        saveError={ saveError }
         yesCallback={ (procedure) => this.newProcedure(procedure) }
         noCallback={ () => this.clearModal() }
       />
     )
   }
 
-  editProcedureHandler = (procedure) => {
+  editProcedureHandler = (procedure, saveError = false) => {
     this.renderModal(
       <FormModal
         tittle="Editar Procedimento"
         element={ procedure }
+        saveError={ saveError }
         yesCallback={ (procedure) => this.saveProcedure(procedure) }
         noCallback={ () => this.clearModal() }
       />
@@ -87,7 +111,9 @@ export default class Procedures extends React.Component {
         this.fetchProcedures();
       })
       .catch((error) => {
-        console.log(error);
+        this.clearModal();
+        const saveError = true;
+        this.editProcedureHandler(procedure, saveError);
       });
     
   }
@@ -99,7 +125,9 @@ export default class Procedures extends React.Component {
         this.fetchProcedures();
       })
       .catch((error) => {
-        console.log(error);
+        this.clearModal();
+        const saveError = true;
+        this.newProcedureHandler(procedure, saveError);
       });
     
   }
@@ -142,7 +170,7 @@ export default class Procedures extends React.Component {
             <tr>
               <th>Nome</th>
               <th>Custo</th>
-              <th><button className="button is-success is-small" onClick={ this.newProcedureHandler }>Novo +</button></th>
+              <th><button className="button is-success is-small" onClick={ () => this.newProcedureHandler() }>Novo +</button></th>
             </tr>
           </thead>
           <tbody>
