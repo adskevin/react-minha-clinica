@@ -10,7 +10,9 @@ export default class Professionals extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      professionals: []
+      professionals: [],
+      isLoading: true,
+      fetchError: false
     };
   }
 
@@ -19,13 +21,19 @@ export default class Professionals extends React.Component {
   }
 
   fetchProfessionals = () => {
+    this.setState({ isLoading: true });
     axios.get(baseURL + '/api/professionals')
     .then((response) => {
       this.setState({
-        professionals: response.data
+        professionals: response.data,
+        isLoading: false
       })
     })
-    .catch(function (error) {
+    .catch((error) => {
+      this.setState({
+        isLoading: false,
+        fetchError: true
+      })
       console.log(error);
     });
   }
@@ -42,6 +50,20 @@ export default class Professionals extends React.Component {
   }
 
   placeProfessionals = () => {
+    if(this.state.isLoading) {
+      return (
+        <tr>
+          <td colSpan="3">Carregando profissionais...</td>
+        </tr>
+      )
+    }
+    if(this.state.fetchError) {
+      return (
+        <tr>
+          <td colSpan="3">Erro ao carregar os profissionais</td>
+        </tr>
+      )
+    }
     return this.state.professionals.map((element) => {
       return (
         <tr key={ element.id }>

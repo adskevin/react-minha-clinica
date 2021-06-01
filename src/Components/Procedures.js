@@ -10,7 +10,9 @@ export default class Procedures extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      procedures: []
+      procedures: [],
+      isLoading: true,
+      fetchError: false
     };
   }
 
@@ -19,13 +21,19 @@ export default class Procedures extends React.Component {
   }
 
   fetchProcedures = () => {
+    this.setState({ isLoading: true });
     axios.get(baseURL + '/api/procedures')
     .then((response) => {
       this.setState({
-        procedures: response.data
+        procedures: response.data,
+        isLoading: false
       })
     })
-    .catch(function (error) {
+    .catch((error) => {
+      this.setState({
+        isLoading: false,
+        fetchError: true
+      })
       console.log(error);
     });
   }
@@ -42,6 +50,20 @@ export default class Procedures extends React.Component {
   }
 
   placeProcedures = () => {
+    if(this.state.isLoading) {
+      return (
+        <tr>
+          <td colSpan="3">Carregando procedimentos...</td>
+        </tr>
+      )
+    }
+    if(this.state.fetchError) {
+      return (
+        <tr>
+          <td colSpan="3">Erro ao carregar os procedimentos</td>
+        </tr>
+      )
+    }
     return this.state.procedures.map((element) => {
       return (
         <tr key={ element.id }>

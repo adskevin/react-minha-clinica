@@ -10,7 +10,9 @@ export default class Patients extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      patients: []
+      patients: [],
+      isLoading: true,
+      fetchError: false
     };
   }
 
@@ -19,13 +21,19 @@ export default class Patients extends React.Component {
   }
 
   fetchPatients = () => {
+    this.setState({ isLoading: true });
     axios.get(baseURL + '/api/patients')
     .then((response) => {
       this.setState({
-        patients: response.data
+        patients: response.data,
+        isLoading: false
       })
     })
-    .catch(function (error) {
+    .catch((error) => {
+      this.setState({
+        isLoading: false,
+        fetchError: true
+      })
       console.log(error);
     });
   }
@@ -42,6 +50,20 @@ export default class Patients extends React.Component {
   }
 
   placePatients = () => {
+    if(this.state.isLoading) {
+      return (
+        <tr>
+          <td colSpan="3">Carregando pacientes...</td>
+        </tr>
+      )
+    }
+    if(this.state.fetchError) {
+      return (
+        <tr>
+          <td colSpan="3">Erro ao carregar os pacientes</td>
+        </tr>
+      )
+    }
     return this.state.patients.map((element) => {
       return (
         <tr key={ element.id }>
