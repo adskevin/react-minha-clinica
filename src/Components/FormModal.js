@@ -5,7 +5,8 @@ export default class EditModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      element: {}
+      element: {},
+      saving: false
     };
   }
 
@@ -114,6 +115,25 @@ export default class EditModal extends React.Component {
     );
   }
 
+  placeError = () => {
+    if(this.props.saveError) {
+      return (
+        <div className="is-flex message is-danger">
+          <div className="message-body">
+            <p><strong>Erro ao salvar</strong></p>
+          </div>
+        </div>
+      )
+    }
+  }
+
+  yesCallbackHandler = () => {
+    this.setState({
+      saving: true
+    })
+    this.props.yesCallback(this.state.element);
+  }
+
   render () {
     return (
       <div className="modal is-active">
@@ -124,12 +144,13 @@ export default class EditModal extends React.Component {
             <button className="delete" aria-label="close" onClick={ this.props.noCallback }></button>
           </header>
           <section className="modal-card-body">
+            { this.placeError() }
             <form>
               { this.placeFields() }
             </form>
           </section>
           <footer className="modal-card-foot">
-            <button className="button is-success" onClick={ () => this.props.yesCallback(this.state.element) }>Salvar</button>
+            <button className={ `button is-success " ${ this.state.saving ? "is-loading" : "" }` } onClick={ this.yesCallbackHandler  }>Salvar</button>
             <button className="button is-danger" onClick={ this.props.noCallback }>Cancelar</button>
           </footer>
         </div>

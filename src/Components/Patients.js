@@ -80,22 +80,24 @@ export default class Patients extends React.Component {
     })
   }
 
-  newPatientHandler = () => {
+  newPatientHandler = (element = { nome: '', telefone: '' }, saveError = false) => {
     this.renderModal(
       <FormModal
         tittle="Novo Paciente"
-        element={ { nome: '', telefone: '' } }
+        element={ element }
+        saveError={ saveError }
         yesCallback={ (patient) => this.newPatient(patient) }
         noCallback={ () => this.clearModal() }
       />
     )
   }
 
-  editPatientHandler = (patient) => {
+  editPatientHandler = (patient, saveError = false) => {
     this.renderModal(
       <FormModal
         tittle="Editar Paciente"
         element={ patient }
+        saveError={ saveError }
         yesCallback={ (patient) => this.savePatient(patient) }
         noCallback={ () => this.clearModal() }
       />
@@ -109,7 +111,9 @@ export default class Patients extends React.Component {
         this.fetchPatients();
       })
       .catch((error) => {
-        console.log(error);
+        this.clearModal();
+        const saveError = true;
+        this.editPatientHandler(patient, saveError);
       });
     
   }
@@ -121,7 +125,9 @@ export default class Patients extends React.Component {
         this.fetchPatients();
       })
       .catch((error) => {
-        console.log(error);
+        this.clearModal();
+        const saveError = true;
+        this.newPatientHandler(patient, saveError);
       });
     
   }
@@ -164,7 +170,7 @@ export default class Patients extends React.Component {
             <tr>
               <th>Nome</th>
               <th>Telefone</th>
-              <th><button className="button is-success is-small" onClick={ this.newPatientHandler }>Novo +</button></th>
+              <th><button className="button is-success is-small" onClick={ () => this.newPatientHandler() }>Novo +</button></th>
             </tr>
           </thead>
           <tbody>

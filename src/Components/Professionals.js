@@ -80,22 +80,24 @@ export default class Professionals extends React.Component {
     })
   }
 
-  newProfessionalHandler = () => {
+  newProfessionalHandler = (element = { nome: '', cargo: '' }, saveError = false) => {
     this.renderModal(
       <FormModal
         tittle="Novo Profissional"
-        element={ { nome: '', cargo: '' } }
+        element={ element }
+        saveError={ saveError }
         yesCallback={ (professional) => this.newProfessional(professional) }
         noCallback={ () => this.clearModal() }
       />
     )
   }
 
-  editProfessionalHandler = (professional) => {
+  editProfessionalHandler = (professional, saveError = false) => {
     this.renderModal(
       <FormModal
         tittle="Editar Profissional"
         element={ professional }
+        saveError={ saveError }
         yesCallback={ (professional) => this.saveProfessional(professional) }
         noCallback={ () => this.clearModal() }
       />
@@ -109,7 +111,9 @@ export default class Professionals extends React.Component {
         this.fetchProfessionals();
       })
       .catch((error) => {
-        console.log(error);
+        this.clearModal();
+        const saveError = true;
+        this.editProfessionalHandler(professional, saveError);
       });
     
   }
@@ -121,7 +125,9 @@ export default class Professionals extends React.Component {
         this.fetchProfessionals();
       })
       .catch((error) => {
-        console.log(error);
+        this.clearModal();
+        const saveError = true;
+        this.newProfessionalHandler(professional, saveError);
       });
     
   }
@@ -164,7 +170,7 @@ export default class Professionals extends React.Component {
             <tr>
               <th>Nome</th>
               <th>Cargo</th>
-              <th><button className="button is-success is-small" onClick={ this.newProfessionalHandler }>Novo +</button></th>
+              <th><button className="button is-success is-small" onClick={ () => this.newProfessionalHandler() }>Novo +</button></th>
             </tr>
           </thead>
           <tbody>
