@@ -107,7 +107,7 @@ export default class EditModal extends React.Component {
           </section>
           <footer className="modal-card-foot">
             <button className="button is-success" onClick={ () => this.props.yesCallback(this.state.element) }>Salvar</button>
-            <button className="button is-danger" onClick={ this.props.noCallback }>Cancel</button>
+            <button className="button is-danger" onClick={ this.props.noCallback }>Cancelar</button>
           </footer>
         </div>
       </div>
