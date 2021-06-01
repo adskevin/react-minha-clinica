@@ -5,24 +5,24 @@ import ReactDOM from 'react-dom';
 const axios = require('axios').default;
 const baseURL = 'http://127.0.0.1:8000';
 
-export default class Patients extends React.Component {
+export default class Professionals extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      patients: []
+      professionals: []
     };
   }
 
   componentDidMount = () => {
-    this.fetchPatients();
+    this.fetchProfessionals();
   }
 
-  fetchPatients = () => {
-    axios.get(baseURL + '/api/patients')
+  fetchProfessionals = () => {
+    axios.get(baseURL + '/api/professionals')
     .then((response) => {
       this.setState({
-        patients: response.data
+        professionals: response.data
       })
     })
     .catch(function (error) {
@@ -41,16 +41,16 @@ export default class Patients extends React.Component {
     ReactDOM.unmountComponentAtNode(document.getElementById('modal'));
   }
 
-  placePatients = () => {
-    return this.state.patients.map((element) => {
+  placeProfessionals = () => {
+    return this.state.professionals.map((element) => {
       return (
         <tr key={ element.id }>
           <td>{ element.nome }</td>
-          <td>{ element.telefone }</td>
+          <td>{ element.cargo }</td>
           <td>
             <div className="buttons is-centered">
-              <button className="button is-warning is-small" onClick={ () => this.editPatientHandler(element) }>Editar</button>
-              <button className="button is-danger is-small" onClick={ () => this.deleteConfirmationPatientHandler(element.id) }>Excluir</button>
+              <button className="button is-warning is-small" onClick={ () => this.editProfessionalHandler(element) }>Editar</button>
+              <button className="button is-danger is-small" onClick={ () => this.deleteConfirmationProfessionalHandler(element.id) }>Excluir</button>
             </div>
           </td>
         </tr>
@@ -58,33 +58,33 @@ export default class Patients extends React.Component {
     })
   }
 
-  newPatientHandler = () => {
+  newProfessionalHandler = () => {
     this.renderModal(
       <FormModal
-        tittle="Novo Paciente"
-        element={ { nome: '', telefone: '' } }
-        yesCallback={ (patient) => this.newPatient(patient) }
+        tittle="Novo Profissional"
+        element={ { nome: '', cargo: '' } }
+        yesCallback={ (professional) => this.newProfessional(professional) }
         noCallback={ () => this.clearModal() }
       />
     )
   }
 
-  editPatientHandler = (patient) => {
+  editProfessionalHandler = (professional) => {
     this.renderModal(
       <FormModal
-        tittle="Editar Paciente"
-        element={ patient }
-        yesCallback={ (patient) => this.savePatient(patient) }
+        tittle="Editar Profissional"
+        element={ professional }
+        yesCallback={ (professional) => this.saveProfessional(professional) }
         noCallback={ () => this.clearModal() }
       />
     )
   }
 
-  savePatient(patient) {
-    axios.put(baseURL + '/api/patients/' + patient.id, patient)
+  saveProfessional(professional) {
+    axios.put(baseURL + '/api/professionals/' + professional.id, professional)
       .then((response) => {
         this.clearModal();
-        this.fetchPatients();
+        this.fetchProfessionals();
       })
       .catch((error) => {
         console.log(error);
@@ -92,11 +92,11 @@ export default class Patients extends React.Component {
     
   }
 
-  newPatient(patient) {
-    axios.post(baseURL + '/api/patients', patient)
+  newProfessional(professional) {
+    axios.post(baseURL + '/api/professionals', professional)
       .then((response) => {
         this.clearModal();
-        this.fetchPatients();
+        this.fetchProfessionals();
       })
       .catch((error) => {
         console.log(error);
@@ -104,23 +104,23 @@ export default class Patients extends React.Component {
     
   }
 
-  deleteConfirmationPatientHandler = (id) => {
+  deleteConfirmationProfessionalHandler = (id) => {
     ReactDOM.render(
       <ConfirmationModal
         type="is-danger"
-        message="Deseja excluir este paciente?"
-        yesCallback={ () => this.deletePatient(id) }
+        message="Deseja excluir este profissional?"
+        yesCallback={ () => this.deleteProfessional(id) }
         noCallback={ () => this.clearModal() }
       />,
       document.getElementById('modal')
     );
   }
 
-  deletePatient = (id) => {
-    axios.delete(baseURL + '/api/patients/' + id)
+  deleteProfessional = (id) => {
+    axios.delete(baseURL + '/api/professionals/' + id)
       .then((response) => {
         this.clearModal();
-        this.fetchPatients();
+        this.fetchProfessionals();
       })
       .catch((error) => {
         console.log(error);
@@ -136,17 +136,17 @@ export default class Patients extends React.Component {
   render () {
     return (
       <section className="section">
-        <h1 className="title">Pacientes</h1>
+        <h1 className="title">Profissionais</h1>
         <table className="table is-striped is-hoverable is-fullwidth">
           <thead>
             <tr>
               <th>Nome</th>
-              <th>Telefone</th>
-              <th><button className="button is-success is-small" onClick={ this.newPatientHandler }>Novo +</button></th>
+              <th>Cargo</th>
+              <th><button className="button is-success is-small" onClick={ this.newProfessionalHandler }>Novo +</button></th>
             </tr>
           </thead>
           <tbody>
-            { this.placePatients() }
+            { this.placeProfessionals() }
           </tbody>
         </table>
       </section>

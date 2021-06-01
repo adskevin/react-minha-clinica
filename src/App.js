@@ -1,13 +1,12 @@
-import logo from './logo.svg';
 import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 
 import Patients from './Components/Patients'
+import Professionals from './Components/Professionals'
 import MyNavbar from './Components/MyNavbar'
 
 function App() {
@@ -29,7 +28,7 @@ function App() {
               <h1>Procedimentos</h1>
             </Route>
             <Route path="/profissionais">
-              <h1>Profissionais</h1>
+              <Professionals />
             </Route>
           </Switch>
       </Router>

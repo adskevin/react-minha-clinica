@@ -16,7 +16,7 @@ export default class EditModal extends React.Component {
   }
 
   placeName = () => {
-    if((this.state.element && this.state.element.nome) || this.state.element.new) {
+    if((this.state.element && this.state.element.nome) || this.state.element.nome === '') {
       return (
         <div className="field">
           <label className="label">Nome</label>
@@ -38,7 +38,7 @@ export default class EditModal extends React.Component {
   }
   
   placePhone = () => {
-    if((this.state.element && this.state.element.telefone) || this.state.element.new) {
+    if((this.state.element && this.state.element.telefone) ||  this.state.element.telefone === '') {
       return (
         <div className="field">
           <label className="label">Telefone</label>
@@ -59,11 +59,34 @@ export default class EditModal extends React.Component {
     })
   }
 
+  placePosition = () => {
+    if((this.state.element && this.state.element.cargo) || this.state.element.cargo === '') {
+      return (
+        <div className="field">
+          <label className="label">Cargo</label>
+          <div className="control">
+            <input className="input" type="text" value={ this.state.element.cargo } onChange={ this.positionChangeHandler } />
+          </div>
+        </div>
+      )
+    }
+    return null;
+  }
+
+  positionChangeHandler = (e) => {
+    let elementToUpdate = this.state.element;
+    elementToUpdate.cargo = e.target.value;
+    this.setState({
+      element: elementToUpdate
+    })
+  }
+
   placeFields = () => {
     return (
       <>
         { this.placeName() }
         { this.placePhone() }
+        { this.placePosition() }
       </>
     );
   }
