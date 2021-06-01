@@ -7,6 +7,7 @@ import {
 
 import Patients from './Components/Patients'
 import Professionals from './Components/Professionals'
+import Procedures from './Components/Procedures'
 import MyNavbar from './Components/MyNavbar'
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
               <Patients />
             </Route>
             <Route path="/procedimentos">
-              <h1>Procedimentos</h1>
+              <Procedures />
             </Route>
             <Route path="/profissionais">
               <Professionals />

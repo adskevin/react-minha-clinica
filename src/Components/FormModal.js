@@ -81,12 +81,35 @@ export default class EditModal extends React.Component {
     })
   }
 
+  placeCost = () => {
+    if((this.state.element && this.state.element.custo) || this.state.element.custo === '') {
+      return (
+        <div className="field">
+          <label className="label">Custo - R$</label>
+          <div className="control">
+            <input className="input" type="text" value={ this.state.element.custo } onChange={ this.costChangeHandler } />
+          </div>
+        </div>
+      )
+    }
+    return null;
+  }
+
+  costChangeHandler = (e) => {
+    let elementToUpdate = this.state.element;
+    elementToUpdate.custo = e.target.value;
+    this.setState({
+      element: elementToUpdate
+    })
+  }
+
   placeFields = () => {
     return (
       <>
         { this.placeName() }
         { this.placePhone() }
         { this.placePosition() }
+        { this.placeCost() }
       </>
     );
   }
