@@ -27,14 +27,14 @@ export default class MyNavbar extends React.Component {
       <nav className="navbar" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
           <a className="navbar-item" href="/atendimentos">
-            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" />
+            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" alt="logo"/>
           </a>
 
-          <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onClick={ this.menuButtonHandler }>
+          <div role="button" className={ `navbar-burger " ${ this.state.showHamburgerMenu ? "is-active" : "" }` } aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onClick={ this.menuButtonHandler }>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
-          </a>
+          </div>
         </div>
 
         <div id="navbarBasicExample" className={ this.state.showHamburgerMenu ? "navbar-menu is-active" : "navbar-menu" }>

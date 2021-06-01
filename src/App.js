@@ -7,7 +7,7 @@ import {
   Link
 } from "react-router-dom";
 
-
+import Patients from './Components/Patients'
 import MyNavbar from './Components/MyNavbar'
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
               <h1>Atendimentos</h1>
             </Route>
             <Route path="/pacientes">
-              <h1>Pacientes</h1>
+              <Patients />
             </Route>
             <Route path="/procedimentos">
               <h1>Procedimentos</h1>
